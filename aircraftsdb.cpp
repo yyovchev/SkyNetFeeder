@@ -11,7 +11,6 @@ AircraftsDB::AircraftsDB(QObject *parent) : QObject(parent)
 
     /// AddDatebase()
     m_db.setDatabaseName("file:sources?mode=memory&cache=shared");
-//    m_db.setDatabaseName("file::memory:?cache=shared");
 
 
     if( !m_db.open() )

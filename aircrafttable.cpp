@@ -60,9 +60,10 @@ void aircraftTable::CountPos(QSqlQuery qry)
         ///settings value
         Ac.CountPos(mylat,mylong,438/2,range);
 
-        if (Ac.Latitude != 0 && Ac.Longitude != 0)
+        if (Ac.Latitude != 0 && Ac.Longitude != 0){
             Acs.insert(Ac.icao,Ac);
-        //qDebug()<<Ac.icao;
+            qDebug()<<Ac.icao;
+        }
     }
 
     writeinFile(Acs);
@@ -101,16 +102,11 @@ void aircraftTable::PrintCount()
     {
       qFatal( "Failed to connect." );
     }
-    qry_del->exec();
+    //qry_del->exec();
     if (qry->exec())
     {
-//       qry->next();
-//       qDebug()<<qry->value(0).toInt();
-//        if(!qry->isNull("ICAO"))
             CountPos(*qry);
 
-
-     //   qDebug("Done");
     }
 }
 

@@ -1,16 +1,32 @@
-#include "mainwindow.h"
 #include <QApplication>
 #include <QCoreApplication>
 #include <QThread>
 #include <QObject>
 #include <QSettings>
+#include <iostream>
+#include <QPoint>
+#include <QEventLoop>
 
+#include "mainwindow.h"
 #include "aircrafttable.h"
 #include "task.h"
+#include "locations.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QEventLoop testloop;
+
+    /// test of loc
+    Locations myloc;
+    QPoint coordinates = myloc.getCoordinates();
+
+    testloop.exec();
+    /// -------------------------------------
+
 
     /// set Application OrganizationName and ApplicationName for settings
     QCoreApplication::setOrganizationName("YMY");
@@ -23,11 +39,7 @@ int main(int argc, char *argv[])
     settings.setValue("myLong",24.70);
     settings.setValue("myLat",42.50);
 
-    // start mainwindows
-    MainWindow w;
-    w.show();
-
-    // Open thread which decode and store msgs
+    // Open thread which decode and store msgs in sqlite db
     QThread *thread = new QThread();
     Task *task = new Task();
     task->moveToThread(thread);
@@ -50,7 +62,15 @@ int main(int argc, char *argv[])
     QObject::connect( threadTab, SIGNAL(finished()), threadTab, SLOT(deleteLater()));
     threadTab->start();
 
+    // start mainwindows
+//    MainWindow w;
+//    w.show();
 
 
     return a.exec();
 }
+
+
+
+
+

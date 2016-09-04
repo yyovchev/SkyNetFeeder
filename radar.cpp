@@ -145,6 +145,7 @@ void Radar::PrintPlanes(QPainter &painter)
     int col = 0;
     for (AConstIterator iter = Acs.begin(), end = Acs.end(); iter != end; iter ++)
     {
+        qDebug("print");
         row = 1;
         col = (int)(iter.value().Heading / 11.25);
 

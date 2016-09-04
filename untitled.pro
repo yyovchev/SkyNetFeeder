@@ -22,12 +22,11 @@ SOURCES += main.cpp\
     localreader.cpp \
     oevalues.cpp \
     task.cpp \
-    aircrafts.cpp
+    aircrafts.cpp \
+    locations.cpp
 
 HEADERS  += mainwindow.h \
     radar.h \
-    ../../../old code/defines.h \
-    ../../../old code/defines.h \
     defines.h \
     aircraftsdb.h \
     aircrafttable.h \
@@ -35,7 +34,8 @@ HEADERS  += mainwindow.h \
     localreader.h \
     oevalues.h \
     task.h \
-    aircrafts.h
+    aircrafts.h \
+    locations.h
 
 FORMS    += mainwindow.ui
 

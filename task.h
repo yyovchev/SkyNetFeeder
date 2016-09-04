@@ -22,7 +22,7 @@ public slots:
     void CreateTab();
 
 signals:
-    workFinished();
+    void workFinished();
 };
 
 #endif // TASK_H
