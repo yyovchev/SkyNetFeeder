@@ -24,7 +24,7 @@ Radar::Radar(QWidget *parent) : QWidget(parent), sprite(":/resources/images/spri
     selectedIcao = 0;
 
     timer = new QTimer();
-    timer->start(1250);
+    timer->start(3000);
     connect(timer,SIGNAL(timeout()),this,SLOT(readFile()));
 
 }
@@ -113,7 +113,7 @@ void Radar::readFile()
     Acs.clear();
 
     Aircraft Ac;
-    QFile file("sources.txt");
+    QFile file("new.txt");
         if (!file.open(QIODevice::ReadOnly)){
             qDebug()<<file.errorString();
             return;
@@ -132,7 +132,7 @@ void Radar::readFile()
             in>>Ac.r_x;
             in>>Ac.r_y;
             in>>Ac.Distance;
-            qDebug()<<QString::number(Ac.icao,16).toUpper();
+//            qDebug()<<QString::number(Ac.icao,16).toUpper();
             if (Ac.icao != 0 && Ac.Distance < RadarRange)
             Acs.insert(Ac.icao,Ac);
         }

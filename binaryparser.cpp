@@ -1,6 +1,8 @@
 #include "binaryparser.h"
 #include <cmath>
 #include <QTime>
+#include <QDebug>
+#include <iostream>
 
 BinaryParser::BinaryParser():
     charset("#ABCDEFGHIJKLMNOPQRSTUVWXYZ##### ###############0123456789######")
@@ -37,26 +39,27 @@ BinaryParser::~BinaryParser()
 DataTypes BinaryParser::parseData(const unsigned char *data) {
     int df = (data[0] >> 3);
 
+
     //check if msg's type id DF17
-    if (df!=17) // if it is not DF17 format return TYPE_UNKOWN
+    if (df!=17)                         // if it is not DF17 format return TYPE_UNKOWN
         return TYPE_UNKOWN;
     else if (df == 17)
     {
-        GetICAO(data);  // Get ICOA and insert it into tables
+        GetICAO(data);                  // Get ICOA and insert it into tables
         int tc = data[4]>>3;
          if (tc <= 4)
          {
-             IDDecode(data); // Get Callsign
+             IDDecode(data);            // Get Callsign
              return TYPE_DF17_TC4;
          }
          else if (tc == 17 || tc== 19)
          {
-             GetSpeed(data); // Get Speed, vertical speed and track
+             GetSpeed(data);            // Get Speed, vertical speed and track
              return TYPE_DF17_TC17;
          }
          else if (tc >= 9 && tc <= 18)
          {
-             GetPosition(data); // Get Longitude, latitude and altitude
+             GetPosition(data);         // Get Longitude, latitude and altitude
              return TYPE_DF17_AllPos;
          }
     }
@@ -106,6 +109,7 @@ void BinaryParser::GetICAO(const unsigned char *data)
 {
     int c;
     ICAO = 0;
+
 //  Get ICAO
     for (int i=1;i<=3;i++)
     {
@@ -159,6 +163,7 @@ void BinaryParser::GetSpeed(const unsigned char*data)
 
 void BinaryParser::GetPosition(const unsigned char *data)
 {
+
     //Decode and update altitude value
     int lt = (data[5] << 4) | (data[6] >> 4);
     int n = ((lt & 0x0FE0) >> 1) | (lt & 0x000F);
@@ -167,7 +172,7 @@ void BinaryParser::GetPosition(const unsigned char *data)
 
 
     //Decode and update Long Lat value
-    if (OddEvenValues->IsTimeNull()) // Check is this is the frirst part
+    if (OddEvenValues->IsTimeNull())      // Check is this is the frirst part
         OddEvenValues->SetTime();
 
     bool frame = (data[6]>>2)&0x1;
@@ -175,21 +180,21 @@ void BinaryParser::GetPosition(const unsigned char *data)
     int lon = 0;
     int lat = 0;
 
-    if (frame) // Odd frame
+    if (frame)      // Odd frame
     {
         lat = ((data[6] & 0x03) << 15) | (data[7] << 7) | (data[8] >> 1);
         lon = ((data[8] & 0x01) << 16) | (data[9] << 8) | data[10];
         OddEvenValues->SetOddValues(lon,lat);
     }
-    else // Even frame
+    else            // Even frame
     {
         lat = ((data[6] & 0x03) << 15) | (data[7] << 7) | (data[8] >> 1);
         lon = ((data[8] & 0x01) << 16) | (data[9] << 8) | data[10];
         OddEvenValues->SetEvenValues(lon,lat);
     }
 
-    if (OddEvenValues->SecFromFRmsg() > 20) // if the fr msg is older than 20s
-    {                                       // clear mid values
+    if (OddEvenValues->SecFromFRmsg() > 20)     // if the fr msg is older than 20s clear mid values
+    {
         OddEvenValues->SetTime(QTime::fromString("0", "s"));
         OddEvenValues->SetOddValues(0,0);
         OddEvenValues->SetEvenValues(0,0);
@@ -238,6 +243,7 @@ void BinaryParser::GetPosition(const unsigned char *data)
 
     if (Longitude >= 180)
         Longitude = Longitude - 360;
+
 
 //  Add Longitude and Latitude
     sources->UpdatePositions(ICAO,Longitude,Latitude);

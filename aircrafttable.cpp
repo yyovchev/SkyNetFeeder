@@ -9,8 +9,7 @@ aircraftTable::aircraftTable(QObject *parent) : QObject(parent)
     m_db = QSqlDatabase::addDatabase("QSQLITE","conn2");
 
     /// AddDatebase()
-    m_db.setDatabaseName("file:sources?mode=memory&cache=shared");
-//    m_db.setDatabaseName("file::memory:?cache=shared");
+    m_db.setDatabaseName("sources");
 
     if( !m_db.open() )
     {
@@ -38,7 +37,7 @@ aircraftTable::~aircraftTable()
 
 void aircraftTable::CountPos(QSqlQuery qry)
 {
-
+    int br =0;
     Aircraft Ac;
     Aircrafts Acs;
 
@@ -48,6 +47,7 @@ void aircraftTable::CountPos(QSqlQuery qry)
 
     while (qry.next())
     {
+
         Ac.icao  = qry.value("ICAO").toInt();
         Ac.Callsign  = qry.value("Callsign").toString();
         Ac.Longitude = qry.value("Longitude").toDouble();
@@ -57,21 +57,21 @@ void aircraftTable::CountPos(QSqlQuery qry)
         Ac.Heading = qry.value("Heading").toInt();
         Ac.Vertical_Rate = qry.value("Vr_speed").toInt();
 
-        ///settings value
-        Ac.CountPos(mylat,mylong,438/2,range);
-
         if (Ac.Latitude != 0 && Ac.Longitude != 0){
+            br++;
+            ///settings value
+            Ac.CountPos(mylat,mylong,438/2,range);
+
             Acs.insert(Ac.icao,Ac);
-            qDebug()<<Ac.icao;
         }
     }
-
+    qDebug()<<br;
     writeinFile(Acs);
 }
 
 void aircraftTable::writeinFile(Aircrafts Acs)
 {
-    QFile file("sources.txt");
+    QFile file("new.txt");
     if (!file.open(QIODevice::WriteOnly)) {
         qDebug()<<file.errorString();
         return;
@@ -102,11 +102,14 @@ void aircraftTable::PrintCount()
     {
       qFatal( "Failed to connect." );
     }
-    //qry_del->exec();
+    qry_del->exec();
     if (qry->exec())
     {
             CountPos(*qry);
 
+    }
+    else {
+//        qDebug()<<qry->lastError().text();
     }
 }
 

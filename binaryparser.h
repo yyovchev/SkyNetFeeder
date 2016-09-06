@@ -1,5 +1,10 @@
 #ifndef BINARYPARSER_H
 #define BINARYPARSER_H
+
+///========================================================
+/// This class decode ADS-B type DF17
+///========================================================
+
 #include <QString>
 #include <math.h>
 #include <QHash>
@@ -16,8 +21,8 @@ enum DataTypes {
 class BinaryParser
 {
 public:
-    const char *charset;
-    int ICAO;
+    const char *charset;    // string with all possible character for the callsign
+    int ICAO;               // unique value of the plane (base 16)
 
     QString Callsign;
 
@@ -28,22 +33,25 @@ public:
     double Longitude;
     double Latitude;
     int Altitude;
-    int LAT_CPR_EVEN;
-    int LON_CPR_EVEN;
-    int LAT_CPR_ODD;
-    int LON_CPR_ODD;
 
-    AircraftsDB *sources;
-    OEValues *OddEvenValues;
+    int LAT_CPR_EVEN;       // Mid value used for decoding Latitude
+    int LON_CPR_EVEN;       // Mid value used for decoding Longitude
+    int LAT_CPR_ODD;        // Mid value used for decoding Latitude
+    int LON_CPR_ODD;        // Mid value used for decoding Longitude
+
+    AircraftsDB *sources;       // Store all information abaut the planes
+    OEValues *OddEvenValues;    // Store mid vallues of ecery plane
 
 public:
     BinaryParser();
     ~BinaryParser();
-    DataTypes parseData(const unsigned char *);
-    void GetICAO (const unsigned char*);
-    void IDDecode (const unsigned char*);
-    void GetSpeed(const unsigned char*);
-    void GetPosition(const unsigned char*);
+    DataTypes parseData(const unsigned char *);     // 'main' method
+
+private:
+    void GetICAO (const unsigned char*);            // Get icao from the msg (first 8 bytes)
+    void IDDecode (const unsigned char*);           // Decodo the char set
+    void GetSpeed(const unsigned char*);            // Decode the speed, heading and vertical speed
+    void GetPosition(const unsigned char*);         // Decode altitude, longitude and latitude (long. and lat. come in two parts)
     int getNL(double);
     int Modulo(int , int);
 };

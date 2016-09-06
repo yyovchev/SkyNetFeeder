@@ -1,6 +1,13 @@
 #ifndef LOCALREADER_H
 #define LOCALREADER_H
 
+///=======================================================================
+/// This class read the messages from local tcp server (localhost:30002)
+/// hosted by dump1090. It removes the unnecessary parts of every message
+/// and send it to binaryparser do decode it.
+///
+
+
 #include <QObject>
 #include <QTcpSocket>
 #include <QDebug>
@@ -29,7 +36,7 @@ private:
     char line[MAX_LINE_LENGTH+1];
     unsigned char bin_data[MAX_LINE_LENGTH/2];
     size_t read_pos;
-    QTimer *timer;
+    QTimer *timer;                              //when its disconnect, chek every 1.5s for connection
 
 public:
     explicit localreader(QObject *parent = 0);

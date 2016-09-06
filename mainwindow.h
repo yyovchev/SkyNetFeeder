@@ -3,6 +3,17 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
+#include <QObject>
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+#include <QTimer>
+#include <QSqlQuery>
+#include <QSettings>
+#include "aircrafts.h"
+
 
 namespace Ui {
 class MainWindow;

@@ -10,7 +10,7 @@ AircraftsDB::AircraftsDB(QObject *parent) : QObject(parent)
     m_db = QSqlDatabase::addDatabase("QSQLITE");
 
     /// AddDatebase()
-    m_db.setDatabaseName("file:sources?mode=memory&cache=shared");
+    m_db.setDatabaseName("sources");
 
 
     if( !m_db.open() )
@@ -23,7 +23,7 @@ AircraftsDB::AircraftsDB(QObject *parent) : QObject(parent)
     qry = new QSqlQuery(m_db);
 
     // Create table ( ICAO, Callsign, Long, Lat, Alt, Speed, Vr, Heading)
-    qry->prepare( "create table if not exists flights(ICAO INTEGER UNIQUE PRIMARY KEY, "
+   qry->prepare( "create table if not exists flights(ICAO INTEGER UNIQUE PRIMARY KEY, "
                   "Callsign TEXT,"
                   "Longitude REAL,"
                   "Latitude REAL,"

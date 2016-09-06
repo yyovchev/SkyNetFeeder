@@ -55,12 +55,12 @@ void localreader::ReadData()
                    line[read_pos]=0;
                    int offset = 6;
 
-                   //qDebug()<<line;
+//                   qDebug()<<line;
 
                    hex2bin(line, read_pos, bin_data);
 
-                   parser.parseData(&bin_data[offset]);
-
+//                   parser.parseData(&bin_data[offset]);   old version of dump1090 ()
+                   parser.parseData(bin_data);
 
                    state=STATE_WAIT;
                } else {

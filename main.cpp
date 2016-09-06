@@ -17,17 +17,18 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
-    QEventLoop testloop;
+/*
+//    QEventLoop testloop;
 
     /// test of loc
     Locations myloc;
     QPoint coordinates = myloc.getCoordinates();
 
-    testloop.exec();
+//    testloop.exec();
+
     /// -------------------------------------
 
-
+*/
     /// set Application OrganizationName and ApplicationName for settings
     QCoreApplication::setOrganizationName("YMY");
     QCoreApplication::setApplicationName("PlaneRadar02");
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
     // set settings
     // myLat myLong - Sliven's coordinates
     QSettings settings;
-    settings.setValue("Radar_Range",150);
+    settings.setValue("Radar_Range",400);
     settings.setValue("myLong",24.70);
     settings.setValue("myLat",42.50);
 
@@ -63,8 +64,8 @@ int main(int argc, char *argv[])
     threadTab->start();
 
     // start mainwindows
-//    MainWindow w;
-//    w.show();
+    MainWindow w;
+    w.show();
 
 
     return a.exec();
