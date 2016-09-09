@@ -22,11 +22,6 @@ Radar::Radar(QWidget *parent) : QWidget(parent), sprite(":/resources/images/spri
     hit_x = icon_width / 2.0;
     hit_y = icon_height / 2.0;
     selectedIcao = 0;
-
-    timer = new QTimer();
-    timer->start(3000);
-    connect(timer,SIGNAL(timeout()),this,SLOT(readFile()));
-
 }
 
 Radar::~Radar()
@@ -108,35 +103,13 @@ void Radar::drawRadarToBackground(QPainter &painter) {
     painter.end();
 }
 
-void Radar::readFile()
+void Radar::setSources(Aircrafts aircraftsts)
 {
     Acs.clear();
 
-    Aircraft Ac;
-    QFile file("new.txt");
-        if (!file.open(QIODevice::ReadOnly)){
-            qDebug()<<file.errorString();
-            return;
-        }
+    Acs = aircraftsts;
 
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            in>>Ac.icao;
-            in>>Ac.Callsign;
-            in>>Ac.Longitude;
-            in>>Ac.Latitude;
-            in>>Ac.Altitude;
-            in>>Ac.Heading;
-            in>>Ac.Speed;
-            in>>Ac.Vertical_Rate;
-            in>>Ac.r_x;
-            in>>Ac.r_y;
-            in>>Ac.Distance;
-//            qDebug()<<QString::number(Ac.icao,16).toUpper();
-            if (Ac.icao != 0 && Ac.Distance < RadarRange)
-            Acs.insert(Ac.icao,Ac);
-        }
-        this->update();
+    this->update();
 }
 
 void Radar::PrintPlanes(QPainter &painter)

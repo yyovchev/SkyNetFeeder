@@ -10,7 +10,7 @@ AircraftsDB::AircraftsDB(QObject *parent) : QObject(parent)
     m_db = QSqlDatabase::addDatabase("QSQLITE");
 
     /// AddDatebase()
-    m_db.setDatabaseName("sources");
+    m_db.setDatabaseName(":memdb1?mode=memory&cache=shared");
 
 
     if( !m_db.open() )

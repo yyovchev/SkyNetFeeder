@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     QObject::connect( thread, SIGNAL(finished()), task, SLOT(deleteLater()));
     QObject::connect( thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
-
+/*
     // Open thread which read db and del the old inf
     // put info in file which radar reads
     QThread *threadTab = new QThread();
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     QObject::connect( threadTab, SIGNAL(finished()), task_T, SLOT(deleteLater()));
     QObject::connect( threadTab, SIGNAL(finished()), threadTab, SLOT(deleteLater()));
     threadTab->start();
-
+*/
     // start mainwindows
     MainWindow w;
     w.show();

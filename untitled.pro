@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     oevalues.cpp \
     task.cpp \
     aircrafts.cpp \
-    locations.cpp
+    locations.cpp \
+    datareader.cpp
 
 HEADERS  += mainwindow.h \
     radar.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     oevalues.h \
     task.h \
     aircrafts.h \
-    locations.h
+    locations.h \
+    datareader.h
 
 FORMS    += mainwindow.ui
 

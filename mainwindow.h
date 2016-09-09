@@ -2,17 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSettings>
-#include <QDebug>
-#include <QFile>
-#include <QTextStream>
 #include <QObject>
-#include <QSqlDatabase>
-#include <QSqlTableModel>
 #include <QTimer>
-#include <QSqlQuery>
-#include <QSettings>
+#include <QString>
+
 #include "aircrafts.h"
+#include "datareader.h"
 
 
 namespace Ui {
@@ -28,10 +23,14 @@ public:
     ~MainWindow();
 
 private slots:
+    void SetSources();
 
 private:
     Ui::MainWindow *ui;
     QSettings settings;
+    QTimer *timer;
+    dataReader *DB_reader;
+
 };
 
 #endif // MAINWINDOW_H

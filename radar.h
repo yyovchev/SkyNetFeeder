@@ -31,8 +31,8 @@ public:
 public:
     explicit Radar(QWidget *parent = 0);
     ~Radar();
-    double getX(double L);
-    double getY(double L);
+
+    void setSources(Aircrafts aircraftsts);
 
 private:
     QPixmap *background;
@@ -43,7 +43,6 @@ private:
     float offset;
     double radar_top;
     double radar_left;
-    QTimer *timer;
     Aircrafts Acs;
     QSettings settings;
     double hit_x;
@@ -51,23 +50,18 @@ private:
     int selectedIcao;
     AConstIterator hit_iterator;
 
-
 private:
     void drawRadarToBackground(QPainter &painter);
     void PrintPlanes(QPainter &painter);
     AConstIterator hitTest(QPoint p);
-
+    double getX(double L);
+    double getY(double L);
 
 protected:
     void mousePressEvent(QMouseEvent * event); //
     void paintEvent(QPaintEvent *event);
 
 
-
-signals:
-
-private slots:
-    void readFile();
 };
 
 #endif // RADAR_H
