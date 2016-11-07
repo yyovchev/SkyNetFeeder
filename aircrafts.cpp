@@ -1,5 +1,6 @@
 #include "aircrafts.h"
 
+
 void Aircraft::CountPos(double center_lat, double center_lon, int radius, int range)
 {
     double lat1 = D2R(center_lat); 			// long1, lat1 my coordinates

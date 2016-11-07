@@ -33,6 +33,8 @@ Aircrafts dataReader::getFlights()
     Aircraft Ac;
     Aircrafts Acs;
 
+    qDebug()<<"here";
+
     double mylat = settings.value("myLat").toDouble();
     double mylong = settings.value("myLong").toDouble();
     int range = settings.value("Radar_Range").toInt();
@@ -60,6 +62,7 @@ Aircrafts dataReader::getFlights()
                 ///settings value
                 Ac.CountPos(mylat,mylong,438/2,range);
                 Acs.insert(Ac.icao,Ac);
+                qDebug()<<Ac.icao<<" added";
             }
         }
     }

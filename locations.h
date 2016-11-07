@@ -17,21 +17,29 @@
 #include <QSslConfiguration>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QStringList>
+
+struct CoordinatePoint {
+    double x;
+    double y;
+};
+
 
 
 class Locations
 {
+private:
+    QSqlDatabase TownLoacations;
+    QSqlQuery *qry;
+
 public:
     Locations();
-    QPoint getCoordinates();
+    ~Locations();
+    CoordinatePoint getTownLocation(QString name);
+    CoordinatePoint getCoordinatesOnline();
 
 private:
-    void getTownLocation();
-    void getCoordinatesOnline();
-    void writeCoordinates();
-
-private:
-    QPoint coordinates;
+    CoordinatePoint coordinates;
 
 };
 

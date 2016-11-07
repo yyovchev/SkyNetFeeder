@@ -4,8 +4,8 @@
 ///================================================================================================
 /// This class create structure Aircraft, in which is saved all temporary information about flights
 /// Aircraft CountPos count the coordinates of the plane on the desktop (r_x and r_y)
-/// Bearing and Distance are count in the CountPos method, they depend on the plane location
-/// Radios is the radios of the biggest circle of radar (fixed)
+/// Bearing and Distance are count in the CountPos method, they depend on the plane's location
+/// Radios is the radios of the biggest circle of radar (const)
 /// center_lat and certer_lon are the coordinates of the user, there are taken from the settings
 /// range is the range of the radar (km)
 ///================================================================================================
@@ -31,8 +31,8 @@ public:
     double Distance;        // count in CountPos
     double Bearing;         // count in CountPos
     int Vertical_Rate;
-    int r_x;                // position of the screen
-    int r_y;                // position of the screen
+    int r_x;                // position on the screen
+    int r_y;                // position on the screen
 public:
     Aircraft() {}
     Aircraft(double lat, double lon, double heading) : Latitude(lat), Longitude(lon), Heading(heading) {}

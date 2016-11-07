@@ -1,37 +1,16 @@
 #include "locations.h"
-
+#include <QMessageBox>
 Locations::Locations()
 {
     // coordinates which we will return to the main function
     // x: longitude
     // y: latitude
-    coordinates = QPoint(0,0);
-}
+    coordinates.x = 0;
+    coordinates.y = 0;
 
-QPoint Locations::getCoordinates()
-{
-    int w;
-    std::cin>>w;
-
-    if (w==1)
-        getTownLocation();
-    else if (w==2)
-        getCoordinatesOnline();
-    else if (w == 3)
-        writeCoordinates();
-
-
-    return coordinates;
-}
-
-void Locations::getTownLocation()
-{
-    std::string town;
-    std::cin>>town;
-    QString townName = QString::fromStdString(town);
 
     //SQLite database with names(en, bg) and locations of every town in Bulgaria
-    QSqlDatabase TownLoacations = QSqlDatabase::addDatabase("QSQLITE");
+    TownLoacations = QSqlDatabase::addDatabase("QSQLITE","townconnection");
     TownLoacations.setDatabaseName("/home/yordan/sqlite/loc");
 
     if( !TownLoacations.open() )
@@ -39,19 +18,36 @@ void Locations::getTownLocation()
       qDebug( "Failed to connect loc database" );
     }
 
-    QSqlQuery qry(TownLoacations);
-    qry.prepare("select loc from location where ekatte = (select ekatte from names where name_en = '" +townName+"')");
-    if (!qry.exec())
-    {
-        qDebug("Town not found !");
-    }
-    else {
-        qry.next();
-        qDebug()<<qry.value("loc").toString();
-    }
+    qry = new QSqlQuery(TownLoacations);
+    //qry->prepare("select loc from location where ekatte = (select ekatte from names where name_en = ':name')");
 }
 
-void Locations::getCoordinatesOnline()
+Locations::~Locations()
+{
+    TownLoacations.close();
+    delete qry;
+}
+
+CoordinatePoint Locations::getTownLocation(QString name)
+{
+    if (!qry->exec("select loc from location where ekatte = (select ekatte from names where name_en = '"+name+"')"))
+    {
+        //QMessageBox::warning(this,tr("Not found"),tr("Town not found !"));
+    }
+    else {
+        qry->next();
+        QString loc;
+        loc = qry->value("loc").toString();
+        QStringList locs = loc.split(",");
+        loc = locs.at(0);
+        coordinates.y = loc.toDouble();
+        loc = locs.at(1);
+        coordinates.x = loc.toDouble();
+    }
+    return coordinates;
+}
+
+CoordinatePoint Locations::getCoordinatesOnline()
 {
     QUrl url = QUrl("http://ipinfo.io/json");
     QNetworkAccessManager manager;
@@ -67,19 +63,19 @@ void Locations::getCoordinatesOnline()
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
     QJsonObject jsdata = doc.object();
 
-    qDebug()<<jsdata["loc"].toString();
+    QString loc;
+    loc = jsdata["loc"].toString();
+    QStringList locs = loc.split(",");
+    loc = locs.at(0);
+    coordinates.x = loc.toDouble();
+    loc = locs.at(1);
+    coordinates.y = loc.toDouble();
 
     reply->deleteLater();
+
+    return coordinates;
 }
 
-void Locations::writeCoordinates()
-{
-    int test;
-    std::cout<<"long: ";
-    std::cin>>test;
-    std::cout<<"lat: ";
-    std::cin>>test;
-}
 
 
 

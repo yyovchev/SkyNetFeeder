@@ -16,7 +16,3 @@ void Task::CreateReader()
     m = new localreader(this);
 }
 
-void Task::CreateTab()
-{
-    n= new aircraftTable(this);
-}

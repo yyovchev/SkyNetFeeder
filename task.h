@@ -2,7 +2,6 @@
 #define TASK_H
 
 #include "localreader.h"
-#include "aircrafttable.h"
 #include <QObject>
 #include <QDebug>
 
@@ -15,11 +14,9 @@ public:
 
 public:
     localreader *m;
-    aircraftTable *n;
 
 public slots:
     void CreateReader();
-    void CreateTab();
 
 signals:
     void workFinished();

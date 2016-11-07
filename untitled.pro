@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += sql network
+QT       += sql network concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,27 +17,27 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     radar.cpp \
     aircraftsdb.cpp \
-    aircrafttable.cpp \
     binaryparser.cpp \
     localreader.cpp \
     oevalues.cpp \
     task.cpp \
     aircrafts.cpp \
     locations.cpp \
-    datareader.cpp
+    datareader.cpp \
+    datasender.cpp
 
 HEADERS  += mainwindow.h \
     radar.h \
     defines.h \
     aircraftsdb.h \
-    aircrafttable.h \
     binaryparser.h \
     localreader.h \
     oevalues.h \
     task.h \
     aircrafts.h \
     locations.h \
-    datareader.h
+    datareader.h \
+    datasender.h
 
 FORMS    += mainwindow.ui
 

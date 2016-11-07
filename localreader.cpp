@@ -1,7 +1,4 @@
 #include "localreader.h"
-#include <QDataStream>
-#include <QHashIterator>
-#include <QThread>
 
 localreader::localreader(QObject *parent) : QObject(parent)
 {
@@ -9,6 +6,7 @@ localreader::localreader(QObject *parent) : QObject(parent)
     state = STATE_WAIT;
     read_pos = 0;
     n_str="";
+    msgCount = 0;
     socket = new QTcpSocket(this);
     socket->connectToHost("localhost",30002);
 
@@ -25,6 +23,10 @@ localreader::localreader(QObject *parent) : QObject(parent)
     }
     connect(socket, SIGNAL(readyRead()), this, SLOT(ReadData()));
     connect(socket,SIGNAL(disconnected()),this,SLOT(Disconnected()));
+
+    timer_wfile = new QTimer();
+    timer_wfile->start(1000);
+    connect(timer_wfile,SIGNAL(timeout()),this,SLOT(wFile()));
 
 
     connect(timer,SIGNAL(timeout()),this,SLOT(TryToConnect()));
@@ -53,11 +55,12 @@ void localreader::ReadData()
            } else if (state == STATE_COLLECT) {
                if (c == ';') {
                    line[read_pos]=0;
-                   int offset = 6;
+//                   int offset = 6;
 
 //                   qDebug()<<line;
 
                    hex2bin(line, read_pos, bin_data);
+                   msgCount++;
 
 //                   parser.parseData(&bin_data[offset]);   old version of dump1090 ()
                    parser.parseData(bin_data);
@@ -115,6 +118,23 @@ void localreader::TryToConnect()
         qDebug()<<"Port: "+ QString::number(socket->peerPort());
         timer->stop();
     }
+}
+
+void localreader::wFile()
+{
+    QtConcurrent::run(writeFile,msgCount);
+    msgCount = 0;
+}
+
+
+void localreader::writeFile(int count)
+{
+    QFile file("data.txt");
+    QTextStream in(&file);
+    file.open(QIODevice::Append);
+    in<<"\n"<<QTime::currentTime().toString()<<","<<QString::number(count);
+    file.close();
+
 }
 
 
