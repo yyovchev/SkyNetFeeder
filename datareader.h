@@ -11,8 +11,10 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include <QtConcurrent>
 
 #include "aircrafts.h"
+#include "datasender.h"
 
 class dataReader : public QObject
 {
@@ -22,10 +24,15 @@ public:
     ~dataReader();
 
 private:
+    void startsender();
+
+private:
      QSqlDatabase m_db;
      QSqlQuery *qry;
      QSqlQuery *qry_del;
      QSettings settings;
+     dataSender sender;
+     unsigned int sec;
 
 public:
      Aircrafts getFlights();

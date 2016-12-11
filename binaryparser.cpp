@@ -165,11 +165,14 @@ void BinaryParser::GetPosition(const unsigned char *data)
 {
 
     //Decode and update altitude value
-    int lt = (data[5] << 4) | (data[6] >> 4);
-    int n = ((lt & 0x0FE0) >> 1) | (lt & 0x000F);
-    Altitude = ((n * 25) - 1000);
-    sources->UpdateValue(ICAO,AircraftsDB::Altitude,Altitude);
+    int q_bit = data[5] & 1;
 
+    if (q_bit) {
+        int lt = (data[5] << 4) | (data[6] >> 4);
+        int n = ((lt & 0x0FE0) >> 1) | (lt & 0x000F);
+        Altitude = ((n * 25) - 1000);
+        sources->UpdateValue(ICAO,AircraftsDB::Altitude,Altitude);
+    }
 
     //Decode and update Long Lat value
     if (OddEvenValues->IsTimeNull())      // Check is this is the frirst part

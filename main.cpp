@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     // set settings
     // myLat myLong - Sliven's coordinates
     QSettings settings;
-    settings.setValue("Radar_Range",400);
+    settings.setValue("Radar_Range",200);
 
     // Open thread which decode and store msgs in sqlite db
     QThread *thread = new QThread();

@@ -2,22 +2,29 @@
 
 dataSender::dataSender(QObject *parent, QString url) : QObject(parent)
 {
-    Url_str = url;
+    Url_str = "http://skynet.sliven.org/skynet.php";
 
     m_db = QSqlDatabase::addDatabase("QSQLITE","read");
     m_db.setDatabaseName(":memdb1?mode=memory&cache=shared");
 
-    if( !m_db.open() )
-    {
-      qDebug( "Failed to connect. 01" );
-    }
     qry = new QSqlQuery(m_db);
-    qry->prepare( "select * from flights" );
 
+    autoSend = false;
+    msec = 2500;
 
     timer = new QTimer();
-    timer->start(2500);
-    QObject::connect(timer,SIGNAL(timeout()),this,SLOT(sendJson()));
+    if (autoSend){
+
+        if( !m_db.open() )
+        {
+          qDebug( "Failed to connect. 01" );
+        }
+
+        qry->prepare( "select * from flights" );
+
+        timer->start(msec);
+        QObject::connect(timer,SIGNAL(timeout()),this,SLOT(sendJson()));
+    }
 
 }
 
@@ -25,6 +32,32 @@ dataSender::~dataSender()
 {
     delete qry;
     delete timer;
+}
+
+void dataSender::setqry(QSqlQuery qry)
+{
+    QJsonObject fl, inf;
+    QJsonArray arr;
+
+    while (qry.next())
+    {
+        inf.insert(QString::fromLatin1("icao"),QString::number(qry.value("ICAO").toInt(),16).toUpper());
+        inf.insert(QString::fromLatin1("callsign"), qry.value("Callsign").toString());
+        inf.insert(QString::fromLatin1("lon"), qry.value("Longitude").toString());
+        inf.insert(QString::fromLatin1("lat"), qry.value("Latitude").toString());
+        inf.insert(QString::fromLatin1("altitude"), qry.value("Altitude").toString());
+        inf.insert(QString::fromLatin1("vr_speed"), qry.value("Vr_speed").toString());
+        inf.insert(QString::fromLatin1("speed"), qry.value("Speed").toString());
+        inf.insert(QString::fromLatin1("heading"),qry.value("Heading").toString());
+
+//        fl.insert("icao",qry.value("icao").toString());
+//        fl.insert("",inf);
+        arr.append(inf);
+    }
+
+    QJsonDocument doc = QJsonDocument::fromVariant(arr.toVariantList());
+ //   qDebug()<<doc.toJson();
+    send(doc.toJson());
 }
 
 void dataSender::send(QByteArray data)

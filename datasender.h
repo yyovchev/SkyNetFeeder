@@ -23,8 +23,13 @@ class dataSender : public QObject
 {
     Q_OBJECT
 public:
-    explicit dataSender(QObject *parent = 0, QString url = "http://softuni.sliven.org/test/upload.php");
+    explicit dataSender(QObject *parent = 0, QString url = "http://skynet.sliven.org/test/jsja.php");
     ~dataSender();
+    void setqry(QSqlQuery qry);
+
+public:
+    bool autoSend;
+    int msec;
 
 public slots:
     void sendJson();

@@ -2,6 +2,8 @@
 
 dataReader::dataReader(QObject *parent) : QObject(parent)
 {
+    sec = 0;
+
     //create table if not exists new(a integer, b integer)
     m_db = QSqlDatabase::addDatabase("QSQLITE","conn2");
 
@@ -28,6 +30,11 @@ dataReader::~dataReader()
     }
 }
 
+void dataReader::startsender()
+{
+
+}
+
 Aircrafts dataReader::getFlights()
 {
     Aircraft Ac;
@@ -46,6 +53,12 @@ Aircrafts dataReader::getFlights()
     qry_del->exec();
     if (qry->exec())
     {
+        if (sec == 6){
+            QSqlQuery sQry = *qry;
+            sender.setqry(sQry);
+            sec = 0;
+            //return NULL;
+        }
         while (qry->next())
         {
 
@@ -65,6 +78,9 @@ Aircrafts dataReader::getFlights()
                 qDebug()<<Ac.icao<<" added";
             }
         }
+
+        sec++;
+
     }
 
     return Acs;

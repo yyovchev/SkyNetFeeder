@@ -53,7 +53,9 @@ void MainWindow::SetSources()
     Aircrafts mid;
 
      mid = DB_reader->getFlights();
+     //if (mid.isEmpty())
      ui->radar->setSources(mid);
+
 //     ui->radar->update();
 }
 
