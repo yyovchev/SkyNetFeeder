@@ -57,7 +57,7 @@ Aircrafts dataReader::getFlights()
             QSqlQuery sQry = *qry;
             sender.setqry(sQry);
             sec = 0;
-            //return NULL;
+            return previousValues;
         }
         while (qry->next())
         {
@@ -82,7 +82,7 @@ Aircrafts dataReader::getFlights()
         sec++;
 
     }
-
+    previousValues = Acs;
     return Acs;
 }
 

@@ -45,7 +45,7 @@ AircraftsDB::AircraftsDB(QObject *parent) : QObject(parent)
 
     qry_IcaoCheck = new QSqlQuery(m_db);
     qry_IcaoCheck->prepare("insert OR IGNORE into flights(ICAO, Callsign, Longitude, Latitude, Altitude, Speed, Vr_speed, "
-                           "Heading, Last_seen) values(:icao, '?', 0, 0, 0, 0, 0,"
+                           "Heading, Last_seen) values(:icao, '', 0, 0, 0, 0, 0,"
                            "0, datetime('now','localtime'))");
 
 }

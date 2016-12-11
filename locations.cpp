@@ -30,11 +30,19 @@ Locations::~Locations()
 
 CoordinatePoint Locations::getTownLocation(QString name)
 {
-    if (!qry->exec("select loc from location where ekatte = (select ekatte from names where name_en = '"+name+"')"))
-    {
-        //QMessageBox::warning(this,tr("Not found"),tr("Town not found !"));
+    if(qry->exec("select count(ekatte) from names where name_en ='" +name+"'")){
+        qry->next();
+        int count = qry->value(0).toInt();
+        if(count == 0)
+        {
+            QMessageBox messageBox;
+            messageBox.warning(0,"Error","Town is not in the database !");
+            coordinates.x = 0; coordinates.y = 0;
+            return coordinates;
+        }
     }
-    else {
+    if (qry->exec("select loc from location where ekatte = (select ekatte from names where name_en = '"+name+"')"))
+    {
         qry->next();
         QString loc;
         loc = qry->value("loc").toString();
@@ -49,6 +57,14 @@ CoordinatePoint Locations::getTownLocation(QString name)
 
 CoordinatePoint Locations::getCoordinatesOnline()
 {
+    QNetworkConfigurationManager cmgr;
+    if (!cmgr.isOnline())
+    {
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error","You are offline !");
+        coordinates.x = 0; coordinates.y = 0;
+        return coordinates;
+    }
     QUrl url = QUrl("http://ipinfo.io/json");
     QNetworkAccessManager manager;
     QNetworkRequest request;
@@ -75,19 +91,3 @@ CoordinatePoint Locations::getCoordinatesOnline()
 
     return coordinates;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

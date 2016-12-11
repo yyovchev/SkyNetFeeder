@@ -33,6 +33,7 @@ private:
      QSettings settings;
      dataSender sender;
      unsigned int sec;
+     Aircrafts previousValues;
 
 public:
      Aircrafts getFlights();

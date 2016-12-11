@@ -47,12 +47,13 @@ void dataSender::setqry(QSqlQuery qry)
         inf.insert(QString::fromLatin1("lat"), qry.value("Latitude").toString());
         inf.insert(QString::fromLatin1("altitude"), qry.value("Altitude").toString());
         inf.insert(QString::fromLatin1("vr_speed"), qry.value("Vr_speed").toString());
-        inf.insert(QString::fromLatin1("speed"), qry.value("Speed").toString());
-        inf.insert(QString::fromLatin1("heading"),qry.value("Heading").toString());
+        inf.insert(QString::fromLatin1("speed"), QString::number(qry.value("Speed").toInt()));
+        inf.insert(QString::fromLatin1("heading"),QString::number(qry.value("Heading").toInt()));
 
 //        fl.insert("icao",qry.value("icao").toString());
 //        fl.insert("",inf);
         arr.append(inf);
+       // qDebug()<<arr;
     }
 
     QJsonDocument doc = QJsonDocument::fromVariant(arr.toVariantList());

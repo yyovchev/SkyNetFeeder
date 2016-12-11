@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->showRadarButton->setEnabled(false);
 
+///                 CHECK FOR PREVIOUS COORDINATES
     if (settings.value("mylat") != 0 && settings.value("mylong") != 0)
     {
         mycoordinates.x = settings.value("myLat").toDouble();
@@ -24,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
         //ui->showRadarButton->setEnabled(true);
         isRadarOn = true;
     }
+
+///                  HIDE RADAR FORM
     isRadarOn = false;
     isRadarVisible = false;
     ui->radar->hide();
@@ -34,12 +37,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->LocMenu_1->hide();
     ui->LocMenu_2->hide();
 
+///                     CREATE TABLE AND ADD HEADER LABELS
+    labels<<"ICAO"<<"Callsign"<<"Latitude"<<"Longitude"<<"Altitude"<<"Headingr"<<"Speed"<<"Vertical speed";
+    ui->AircraftsTable->setColumnCount(8);
+    ui->AircraftsTable->setHorizontalHeaderLabels(labels);
+    ui->AircraftsTable->setRowCount(25);
+    tableRows = ui->AircraftsTable->rowCount();
+
+    ui->AircraftsTable->setItem(1,1,new QTableWidgetItem("dsd"));
+
+///                     TIMER 1~5 SEC PRINT, 6ST SEND
+///                     SetSourses get Aircrafts form datareader and send them to radar
     DB_reader = new dataReader(this);
 
     timer = new QTimer(this);
     timer->start(1000);
 
-//    if (isRadarOn)
     connect(timer,SIGNAL(timeout()),this,SLOT(SetSources()));
 }
 
@@ -48,15 +61,39 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::FillTable(Aircrafts crafts)
+{
+     int row = 0;
+     int rows = crafts.size();
+     qDebug()<<rows;
+    // ui->AircraftsTable->clearContents();
+
+     if (tableRows != rows){
+         tableRows = rows;
+     }
+
+     ui->AircraftsTable->setRowCount(tableRows);
+
+     ui->AircraftsTable->clearContents();
+     for (AConstIterator iter = crafts.begin(), end = crafts.end(); iter != end; row++, iter ++){
+         ui->AircraftsTable->setItem(row,0,new QTableWidgetItem(QString::number(iter.key(),16)));
+         ui->AircraftsTable->setItem(row,1,new QTableWidgetItem(iter.value().Callsign));
+         ui->AircraftsTable->setItem(row,2,new QTableWidgetItem(QString::number(iter.value().Latitude)));
+         ui->AircraftsTable->setItem(row,3,new QTableWidgetItem(QString::number(iter.value().Longitude)));
+         ui->AircraftsTable->setItem(row,4,new QTableWidgetItem(QString::number(iter.value().Altitude)));
+         ui->AircraftsTable->setItem(row,5,new QTableWidgetItem(QString::number(iter.value().Heading)));
+         ui->AircraftsTable->setItem(row,6,new QTableWidgetItem(QString::number(iter.value().Speed)));
+         ui->AircraftsTable->setItem(row,7,new QTableWidgetItem(QString::number(iter.value().Vertical_Rate)));
+     }
+}
+
 void MainWindow::SetSources()
 {
-    Aircrafts mid;
 
-     mid = DB_reader->getFlights();
-     //if (mid.isEmpty())
-     ui->radar->setSources(mid);
-
-//     ui->radar->update();
+     AircraftsValues = DB_reader->getFlights();
+     Aircrafts crafts = AircraftsValues;
+     ui->radar->setSources(AircraftsValues);
+     FillTable(crafts);
 }
 
 
@@ -64,6 +101,7 @@ void MainWindow::on_showRadarButton_clicked()
 {
     if (isRadarVisible){
         ui->radar->setVisible(false);
+        ui->AircraftsTable->setVisible(false);
         setMinimumWidth(230);
         setMaximumWidth(230);
         ui->showRadarButton->setText("Show radar");
@@ -73,6 +111,7 @@ void MainWindow::on_showRadarButton_clicked()
         setMaximumWidth(700);
         setMinimumWidth(700);
         ui->radar->setVisible(true);
+        ui->AircraftsTable->setVisible(true);
         ui->showRadarButton->setText("Hide radar");
         isRadarVisible = ui->radar->isVisible();
     }

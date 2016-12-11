@@ -7,6 +7,7 @@
 #include <QString>
 #include <QPoint>
 #include <QSettings>
+#include <QStringList>
 
 #include "aircrafts.h"
 #include "datareader.h"
@@ -24,6 +25,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    void FillTable(Aircrafts crafts);
 
 private slots:
     void SetSources();
@@ -45,9 +49,12 @@ private:
     QTimer *timer;
     dataReader *DB_reader;
     bool isRadarOn;
-    CoordinatePoint mycoordinates;
     bool isRadarVisible;
+    QStringList labels;
+    int tableRows;
 
+    CoordinatePoint mycoordinates;
+    Aircrafts AircraftsValues;
     Locations locs;
 
 };

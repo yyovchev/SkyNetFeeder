@@ -6,6 +6,7 @@
 #include <iostream>
 #include <QPoint>
 #include <QEventLoop>
+#include <QFile>
 
 #include "mainwindow.h"
 #include "task.h"
@@ -18,12 +19,15 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+
+    //programs settings: OrganizationName, ApplicationName
     QApplication a(argc, argv);// set Application OrganizationName and ApplicationName for settings
-    QCoreApplication::setOrganizationName("YMY");
-    QCoreApplication::setApplicationName("PlaneRadar02");
+    QCoreApplication::setOrganizationName("Skynet");
+    QCoreApplication::setApplicationName("SkynetFeeder");
+
+    // temp file
 
     // set settings
-    // myLat myLong - Sliven's coordinates
     QSettings settings;
     settings.setValue("Radar_Range",200);
 
@@ -39,12 +43,9 @@ int main(int argc, char *argv[])
     thread->start();
 
     //      start mainwindows
-          MainWindow w;
-          w.show();
+    MainWindow w;
+    w.show();
 
-    //dataSender *sender =  new dataSender();
-
-  //  delete sender;
     return a.exec();
 }
 

@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     aircrafts.cpp \
     locations.cpp \
     datareader.cpp \
-    datasender.cpp
+    datasender.cpp \
+    qryreader.cpp \
+    filewriter.cpp
 
 HEADERS  += mainwindow.h \
     radar.h \
@@ -37,7 +39,9 @@ HEADERS  += mainwindow.h \
     aircrafts.h \
     locations.h \
     datareader.h \
-    datasender.h
+    datasender.h \
+    qryreader.h \
+    filewriter.h
 
 FORMS    += mainwindow.ui
 

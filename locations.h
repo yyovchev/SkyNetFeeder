@@ -18,6 +18,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QStringList>
+#include <QNetworkConfigurationManager>
 
 struct CoordinatePoint {
     double x;
